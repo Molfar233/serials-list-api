@@ -12,10 +12,13 @@
 
 ActiveRecord::Schema.define(version: 2022_01_21_205706) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "doramas", force: :cascade do |t|
     t.string "link", null: false
     t.integer "status", null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_doramas_on_user_id"
