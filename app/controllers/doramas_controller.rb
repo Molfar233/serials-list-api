@@ -1,13 +1,26 @@
 class DoramasController < ApplicationController
-  before_action :find_dorama, only: [:create, :viewed]
+  before_action :find_dorama, only: [:create, :destroy]
+
+  def index
+    @dorams = if params[:status].present?
+      Dorama.send(params[:status]).where(user_id: @user.id)
+    else
+      Dorama.where(user_id: @user.id).group(:status).count
+    end
+    render json: @doramas
+  end
 
   def create
+    puts request.query_parameters[:st]
+    if request.query_parameters[:st].present?
+      @dorama.send("#{request.query_parameters[:st]}!")
+    end
     render json: @dorama
   end
 
-  def viewed
-    @dorama.viewed!
-    render json: @dorama
+  def destroy
+    @dorama.destroy
+    render json: { message: 'ok' }
   end
 
   private
