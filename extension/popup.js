@@ -1,3 +1,6 @@
+const url = 'https://stark-everglades-31197.herokuapp.com';
+// const url = 'http://localhost:3000';
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'get-popup-token') {
     sendResponse(getToken());
@@ -13,7 +16,7 @@ const getDoramas = (status) => {
   if (status) st = `?st=${status}`;
   $.ajax({
     method: 'GET',
-    url: `http://localhost:3000/doramas${st}`,
+    url: `${url}/doramas${st}`,
     headers: {
       'Authorization': `${getToken()}`,
       contentType: 'application/json',
@@ -91,7 +94,7 @@ const authForm = () => {
     e.preventDefault();
     $.ajax({
       method: 'POST',
-      url: 'http://localhost:3000/login',
+      url: `${url}/login`,
       data: $('form').serialize(),
       success: (data) => {
         document.cookie = `token=${data.token}`;
