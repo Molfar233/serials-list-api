@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "Dorama Club Ext",
+  "version": "0.0.1",
+  "description": "Dorama Club buttons.",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "all_frames": true,
+      "js": ["content-script.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "declarativeContent",
+    "storage",
+    "<all_urls>"
+  ],
+  "web_accessible_resources": ["inject.js"],
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
+}

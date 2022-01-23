@@ -2,8 +2,8 @@ class DoramasController < ApplicationController
   before_action :find_dorama, only: [:create, :destroy]
 
   def index
-    @dorams = if params[:status].present?
-      Dorama.send(params[:status]).where(user_id: @user.id)
+    @doramas = if request.query_parameters[:st].present?
+      Dorama.send("#{request.query_parameters[:st]}").where(user_id: @user.id)
     else
       Dorama.where(user_id: @user.id).group(:status).count
     end

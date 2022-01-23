@@ -5,9 +5,6 @@ class ApplicationController < ActionController::API
   def authenticate
     if auth_header
       begin
-        puts auth_header
-        puts token
-
         decode_token = JWT.decode(token, secret)
         payload = decode_token.first
         user_id = payload['user_id']
@@ -25,7 +22,7 @@ class ApplicationController < ActionController::API
   end
 
   def token
-    auth_header.split(" ")[1]
+    auth_header.split("=")[1]
   end
 
   def secret
