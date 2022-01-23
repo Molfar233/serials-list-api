@@ -1,3 +1,9 @@
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message === 'get-popup-token') {
+    sendResponse(getToken());
+  }
+});
+
 const getToken = () => {
   return document.cookie.split(';').filter((item) => item.trim().startsWith('token='))
 }
@@ -78,6 +84,7 @@ const authForm = () => {
       data: $('form').serialize(),
       success: (data) => {
         document.cookie = `token=${data.token}`;
+        chrome.runtime.sendMessage({ type: 'set-token', token: data.token});
         auth.remove();
         getDoramas();
       },
@@ -110,6 +117,7 @@ const authForm = () => {
 document.addEventListener('DOMContentLoaded', () => {
   const token = getToken();
   if (token.length) {
+    chrome.runtime.sendMessage({ type: 'set-token', token});
     getDoramas();
   } else {
     authForm();
