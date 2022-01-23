@@ -32,9 +32,20 @@ const doramas = (list) => {
   doramasList.innerHTML = '';
   doramasList.id = 'doramas';
   doramasList.className = 'list-group';
-  doramasList.style.width = '250px';
+  doramasList.style.width = '300px';
+  doramasList.style.maxHeight = '250px';
+  doramasList.style.overflowY = 'scroll';
   if (Array.isArray(list)) {
-    console.log(123);
+    list.forEach(item => {
+      const itemA = document.createElement('A');
+      itemA.className = 'list-group-item list-group-item-action';
+      itemA.href = item.link;
+      itemA.textContent = item.name;
+      itemA.onclick = () => {
+        chrome.tabs.create({url:item.link});
+      }
+      doramasList.appendChild(itemA);
+    });
   } else {
     const viewedCount = list && list.hasOwnProperty('viewed') ? list.viewed : 0;
     const viewed = document.createElement('A');

@@ -11,11 +11,18 @@ class DoramasController < ApplicationController
   end
 
   def create
-    puts request.query_parameters[:st]
-    puts params
     if request.query_parameters[:st].present?
       @dorama.send("#{request.query_parameters[:st]}!")
     end
+    render json: @dorama
+  end
+
+  def status
+    @dorama = Dorama.find_by(
+      link: params[:link],
+      name: params[:name],
+      user_id: @user.id
+    )
     render json: @dorama
   end
 

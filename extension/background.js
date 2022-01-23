@@ -16,5 +16,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'set-token') {
     token = message.token;
   }
+
+  if (message.type === 'get-dorama') {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `http://localhost:3000/doramas/status?link=${message.link}&name=${message.name}`, true);
+    xhr.setRequestHeader("Authorization", token);
+    xhr.onreadystatechange = (data) => {
+      if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        sendResponse(xhr.response);
+      }
+    }
+    xhr.send(null);
+  }
   return true;
 });
