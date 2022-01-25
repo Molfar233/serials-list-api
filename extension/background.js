@@ -30,5 +30,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
     xhr.send(null);
   }
+
+  if (message.type === 'destroy-dorama') {
+    const xhr = new XMLHttpRequest();
+    xhr.open('DELETE', `${url}/doramas/:id?link=${message.link}&name=${message.name}`, true);
+    xhr.setRequestHeader("Authorization", token);
+    xhr.onreadystatechange = (data) => {
+      if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        sendResponse(xhr.response);
+      }
+    }
+    xhr.send(null);
+  }
   return true;
 });

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Dorama Club Ext",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Dorama Club buttons.",
   "background": {
     "scripts": ["background.js"],

@@ -22,6 +22,16 @@ const getDorama = (dorama, callback) => {
   })
 }
 
+const deleteDorama = (dorama) => {
+  chrome.runtime.sendMessage({
+    type: 'destroy-dorama',
+    link: dorama.href,
+    name: dorama.innerText
+  }, (response) => {
+    console.log('received user data', response);
+  })
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const doramasList = document.querySelectorAll('.post-home, .opisanie');
   doramasList.forEach(dorama => {
@@ -38,16 +48,26 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    getDorama(doramaLink, (status) => {
+    getDorama(doramaLink, (status = '') => {
       const viewed = document.createElement('BUTTON');
       viewed.className = 'dorama-ext-viewed';
       viewed.textContent = 'Просмотрено';
       viewed.setAttribute('data-name', doramaLink.innerText);
       viewed.style.marginRight = '10px';
       viewed.style.backgroundColor = status === 'viewed' ? '#75c71b' : '#ee867a';
+      viewed.setAttribute('data-status', status);
       viewed.onclick = () => {
-        updateDorama('viewed', doramaLink);
-        viewed.style.backgroundColor = '#75c71b';
+        if (viewed.getAttribute('data-status') === 'viewed') {
+          deleteDorama(doramaLink);
+          viewed.setAttribute('data-status', '');
+          viewed.style.backgroundColor = '#ee867a';
+        } else {
+          updateDorama('viewed', doramaLink);
+          viewed.setAttribute('data-status', 'viewed');
+          bookmarked.setAttribute('data-status', '');
+          watching.setAttribute('data-status', '');
+          viewed.style.backgroundColor = '#75c71b';
+        }
         bookmarked.style.backgroundColor = '#ee867a';
         watching.style.backgroundColor = '#ee867a';
       };
@@ -58,9 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
       bookmarked.textContent = 'В закладки';
       bookmarked.setAttribute('data-name', doramaLink.innerText);
       bookmarked.style.backgroundColor = status === 'bookmarked' ? '#75c71b' : '#ee867a';
+      bookmarked.setAttribute('data-status', status);
       bookmarked.onclick = () => {
-        updateDorama('bookmarked', doramaLink);
-        bookmarked.style.backgroundColor = '#75c71b';
+        if (bookmarked.getAttribute('data-status') === 'bookmarked') {
+          deleteDorama(doramaLink);
+          bookmarked.setAttribute('data-status', '');
+          bookmarked.style.backgroundColor = '#ee867a';
+        } else {
+          updateDorama('bookmarked', doramaLink);
+          bookmarked.setAttribute('data-status', 'bookmarked');
+          viewed.setAttribute('data-status', '');
+          watching.setAttribute('data-status', '');
+          bookmarked.style.backgroundColor = '#75c71b';
+        }
         viewed.style.backgroundColor = '#ee867a';
         watching.style.backgroundColor = '#ee867a';
       };
@@ -71,9 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
       watching.textContent = 'Смотрю';
       watching.setAttribute('data-name', doramaLink.innerText);
       watching.style.backgroundColor = status === 'watching' ? '#75c71b' : '#ee867a';
+      watching.setAttribute('data-status', status);
       watching.onclick = () => {
-        updateDorama('watching', doramaLink);
-        watching.style.backgroundColor = '#75c71b';
+        if (watching.getAttribute('data-status') === 'watching') {
+          deleteDorama(doramaLink);
+          watching.setAttribute('data-status', '');
+          watching.style.backgroundColor = '#ee867a';
+        } else {
+          updateDorama('watching', doramaLink);
+          bookmarked.setAttribute('data-status', '');
+          viewed.setAttribute('data-status', '');
+          watching.setAttribute('data-status', 'watching');
+          watching.style.backgroundColor = '#75c71b';
+        }
         bookmarked.style.backgroundColor = '#ee867a';
         viewed.style.backgroundColor = '#ee867a';
       };
