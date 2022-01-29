@@ -48,9 +48,42 @@ const deleteSerial = (button) => {
   })
 }
 
+const button = (text, name = '', status= '', id='', serialLink, index) => {
+  const btn = document.createElement('BUTTON');
+  btn.className = `serial-ext serial-ext-${index}`;
+  if (status === name) btn.classList.add('active');
+  if (name === 'viewed') btn.style.marginRight = '10px';
+  if (name === 'watching') btn.style.marginLeft = '10px';
+  btn.textContent = text;
+  btn.setAttribute('data-name', serialLink.innerText);
+  btn.setAttribute('data-status', status === name ? status : '');
+  btn.setAttribute('data-id', id);
+  btn.onclick = () => {
+    if (btn.getAttribute('data-status') === name) {
+      deleteSerial(btn);
+      btn.setAttribute('data-status', '');
+      btn.setAttribute('data-id', '');
+      btn.classList.remove('active');
+    } else {
+      updateSerial(name, serialLink, (_id) => {
+        btn.setAttribute('data-id', _id);
+        const btns = document.querySelectorAll(`.serial-ext-${index}`)
+        btns.forEach(bttn => {
+          bttn.setAttribute('data-status', '');
+          bttn.classList.remove('active');
+        })
+        btn.setAttribute('data-status', name);
+        btn.classList.add('active');
+      });
+    }
+  };
+
+  return btn;
+}
+
 const initButtons = () => {
   const serialsList = document.querySelectorAll('.post-home, .opisanie');
-  serialsList.forEach(serial => {
+  serialsList.forEach((serial, index) => {
     let serialLink = serial.querySelector('a');
     if (!serialLink) {
       const fullName = document.querySelector('.poloska article h1').innerText;
@@ -65,89 +98,40 @@ const initButtons = () => {
     }
 
     getSerial(serialLink, (status = '', id = '') => {
-      const viewed = document.createElement('BUTTON');
-      viewed.className = 'serial-ext-viewed';
-      viewed.textContent = 'Просмотрено';
-      viewed.setAttribute('data-name', serialLink.innerText);
-      viewed.style.marginRight = '10px';
-      viewed.style.backgroundColor = status === 'viewed' ? '#75c71b' : '#ee867a';
-      viewed.setAttribute('data-status', status);
-      viewed.setAttribute('data-id', id);
-      viewed.onclick = () => {
-        if (viewed.getAttribute('data-status') === 'viewed') {
-          deleteSerial(viewed);
-          viewed.setAttribute('data-status', '');
-          viewed.style.backgroundColor = '#ee867a';
-        } else {
-          updateSerial('viewed', serialLink, (_id) => {
-            viewed.setAttribute('data-id', _id);
-            viewed.setAttribute('data-status', 'viewed');
-            bookmarked.setAttribute('data-status', '');
-            watching.setAttribute('data-status', '');
-            viewed.style.backgroundColor = '#75c71b';
-          });
-        }
-        bookmarked.style.backgroundColor = '#ee867a';
-        watching.style.backgroundColor = '#ee867a';
+      const buttons = {
+        viewed: 'Просмотрено',
+        bookmarked: 'В закладки',
+        watching: 'Смотрю'
       };
-      serial.appendChild(viewed);
 
-      const bookmarked = document.createElement('BUTTON');
-      bookmarked.className = 'serial-ext-bookmarked';
-      bookmarked.textContent = 'В закладки';
-      bookmarked.setAttribute('data-name', serialLink.innerText);
-      bookmarked.style.backgroundColor = status === 'bookmarked' ? '#75c71b' : '#ee867a';
-      bookmarked.setAttribute('data-status', status);
-      bookmarked.setAttribute('data-id', id);
-      bookmarked.onclick = () => {
-        if (bookmarked.getAttribute('data-status') === 'bookmarked') {
-          deleteSerial(bookmarked);
-          bookmarked.setAttribute('data-status', '');
-          bookmarked.style.backgroundColor = '#ee867a';
-        } else {
-          updateSerial('bookmarked', serialLink, (_id) => {
-            bookmarked.setAttribute('data-id', _id);
-            bookmarked.setAttribute('data-status', 'bookmarked');
-            viewed.setAttribute('data-status', '');
-            watching.setAttribute('data-status', '');
-            bookmarked.style.backgroundColor = '#75c71b';
-          });
-        }
-        viewed.style.backgroundColor = '#ee867a';
-        watching.style.backgroundColor = '#ee867a';
-      };
-      serial.appendChild(bookmarked);
-
-      const watching = document.createElement('BUTTON');
-      watching.className = 'serial-ext-watching';
-      watching.textContent = 'Смотрю';
-      watching.setAttribute('data-name', serialLink.innerText);
-      watching.style.backgroundColor = status === 'watching' ? '#75c71b' : '#ee867a';
-      watching.setAttribute('data-status', status);
-      watching.setAttribute('data-id', id);
-      watching.onclick = () => {
-        if (watching.getAttribute('data-status') === 'watching') {
-          deleteSerial(watching);
-          watching.setAttribute('data-status', '');
-          watching.style.backgroundColor = '#ee867a';
-        } else {
-          updateSerial('watching', serialLink, (_id) => {
-            watching.setAttribute('data-id', _id);
-            bookmarked.setAttribute('data-status', '');
-            viewed.setAttribute('data-status', '');
-            watching.setAttribute('data-status', 'watching');
-            watching.style.backgroundColor = '#75c71b';
-          });
-        }
-        bookmarked.style.backgroundColor = '#ee867a';
-        viewed.style.backgroundColor = '#ee867a';
-      };
-      watching.style.marginLeft = '10px';
-      serial.appendChild(watching);
+      Object.entries(buttons).forEach(entry => {
+        const [key, value] = entry;
+        const btn = button(
+          value,
+          key,
+          status,
+          id,
+          serialLink,
+          index
+        );
+        serial.appendChild(btn);
+      });
     });
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .serial-ext {
+      background-color: #fbf3f3;
+      color: #000;
+    }
+    .serial-ext.active {
+      background-color: #ec7263;
+      color: #fff;
+    }
+  `;
+  document.body.appendChild(style);
   initButtons();
 });
