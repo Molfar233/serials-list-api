@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42724163-39c3-40f4-a6f2-5bd0e4872248" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/db/migrate/20220129100515_rename_doramas_to_serials.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/authentication_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/authentication_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/doramas_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/serials_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/dorama.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/serial.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/serials_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/serials_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extension/background.js" beforeDir="false" afterPath="$PROJECT_DIR$/extension/background.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extension/content-script.js" beforeDir="false" afterPath="$PROJECT_DIR$/extension/content-script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extension/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/extension/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extension/popup.html" beforeDir="false" afterPath="$PROJECT_DIR$/extension/popup.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extension/popup.js" beforeDir="false" afterPath="$PROJECT_DIR$/extension/popup.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -167,7 +161,7 @@
       <updated>1642794899897</updated>
       <workItem from="1642794904670" duration="34226000" />
       <workItem from="1643139898422" duration="1675000" />
-      <workItem from="1643450567011" duration="8110000" />
+      <workItem from="1643450567011" duration="10790000" />
     </task>
     <servers />
   </component>

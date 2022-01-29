@@ -30,7 +30,7 @@ class SerialsController < ApplicationController
   end
 
   def destroy
-    @serial = Serial.find(id: params[:id])
+    @serial = Serial.find(params[:id])
     @serial.destroy
     render json: { message: 'ok' }
   end

@@ -141,12 +141,7 @@ const authForm = () => {
 document.addEventListener('DOMContentLoaded', () => {
   const token = getToken();
   if (token.length) {
-    chrome.runtime.sendMessage({
-      type: 'set-token',
-      token
-    }, () => {
-      getSerials();
-    });
+    getSerials();
   } else {
     authForm();
   }
