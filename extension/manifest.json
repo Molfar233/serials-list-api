@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Dorama Club Ext",
+  "name": "Serails Ext",
   "version": "1.0.4",
-  "description": "Dorama Club buttons.",
+  "description": "Serails buttons.",
   "background": {
     "scripts": ["background.js"],
     "persistent": true
@@ -24,7 +24,5 @@
     "declarativeContent",
     "storage",
     "<all_urls>"
-  ],
-  "web_accessible_resources": ["inject.js"],
-  "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
+  ]
 }

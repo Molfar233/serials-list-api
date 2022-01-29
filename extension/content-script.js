@@ -1,19 +1,26 @@
-const updateDorama = (status, dorama) => {
+//
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'serials-reload') {
+    window.reload()
+  }
+});
+
+const updateSerial = (status, serial) => {
   chrome.runtime.sendMessage({
-    type: 'send-dorama',
+    type: 'send-serial',
     status,
-    link: dorama.href,
-    name: dorama.innerText
+    link: serial.href,
+    name: serial.innerText
   }, (response) => {
     console.log('received user data', response);
   });
 }
 
-const getDorama = (dorama, callback) => {
+const getSerial = (serial, callback) => {
   chrome.runtime.sendMessage({
-    type: 'get-dorama',
-    link: dorama.href,
-    name: dorama.innerText
+    type: 'get-serial',
+    link: serial.href,
+    name: serial.innerText
   }, (response) => {
     console.log('received user data', response);
     const responseJSON = JSON.parse(response);
@@ -22,47 +29,47 @@ const getDorama = (dorama, callback) => {
   })
 }
 
-const deleteDorama = (dorama) => {
+const deleteSerial = (serial) => {
   chrome.runtime.sendMessage({
-    type: 'destroy-dorama',
-    link: dorama.href,
-    name: dorama.innerText
+    type: 'destroy-serial',
+    link: serial.href,
+    name: serial.innerText
   }, (response) => {
     console.log('received user data', response);
   })
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const doramasList = document.querySelectorAll('.post-home, .opisanie');
-  doramasList.forEach(dorama => {
-    let doramaLink = dorama.querySelector('a');
-    if (!doramaLink) {
+  const serialsList = document.querySelectorAll('.post-home, .opisanie');
+  serialsList.forEach(serial => {
+    let serialLink = serial.querySelector('a');
+    if (!serialLink) {
       const fullName = document.querySelector('.poloska article h1').innerText;
       const nameArr = fullName.split(' ');
       if (nameArr[nameArr.length - 1].startsWith('(')) nameArr.splice(-1);
       if (nameArr[nameArr.length - 1] === 'дорама') nameArr.splice(-1);
       const name = nameArr.join(' ');
-      doramaLink = {
+      serialLink = {
         href: window.location.href,
         innerText: name,
       };
     }
 
-    getDorama(doramaLink, (status = '') => {
+    getSerial(serialLink, (status = '') => {
       const viewed = document.createElement('BUTTON');
-      viewed.className = 'dorama-ext-viewed';
+      viewed.className = 'serial-ext-viewed';
       viewed.textContent = 'Просмотрено';
-      viewed.setAttribute('data-name', doramaLink.innerText);
+      viewed.setAttribute('data-name', serialLink.innerText);
       viewed.style.marginRight = '10px';
       viewed.style.backgroundColor = status === 'viewed' ? '#75c71b' : '#ee867a';
       viewed.setAttribute('data-status', status);
       viewed.onclick = () => {
         if (viewed.getAttribute('data-status') === 'viewed') {
-          deleteDorama(doramaLink);
+          deleteSerial(serialLink);
           viewed.setAttribute('data-status', '');
           viewed.style.backgroundColor = '#ee867a';
         } else {
-          updateDorama('viewed', doramaLink);
+          updateSerial('viewed', serialLink);
           viewed.setAttribute('data-status', 'viewed');
           bookmarked.setAttribute('data-status', '');
           watching.setAttribute('data-status', '');
@@ -71,21 +78,21 @@ document.addEventListener('DOMContentLoaded', () => {
         bookmarked.style.backgroundColor = '#ee867a';
         watching.style.backgroundColor = '#ee867a';
       };
-      dorama.appendChild(viewed);
+      serial.appendChild(viewed);
 
       const bookmarked = document.createElement('BUTTON');
-      bookmarked.className = 'dorama-ext-bookmarked';
+      bookmarked.className = 'serial-ext-bookmarked';
       bookmarked.textContent = 'В закладки';
-      bookmarked.setAttribute('data-name', doramaLink.innerText);
+      bookmarked.setAttribute('data-name', serialLink.innerText);
       bookmarked.style.backgroundColor = status === 'bookmarked' ? '#75c71b' : '#ee867a';
       bookmarked.setAttribute('data-status', status);
       bookmarked.onclick = () => {
         if (bookmarked.getAttribute('data-status') === 'bookmarked') {
-          deleteDorama(doramaLink);
+          deleteSerial(serialLink);
           bookmarked.setAttribute('data-status', '');
           bookmarked.style.backgroundColor = '#ee867a';
         } else {
-          updateDorama('bookmarked', doramaLink);
+          updateSerial('bookmarked', serialLink);
           bookmarked.setAttribute('data-status', 'bookmarked');
           viewed.setAttribute('data-status', '');
           watching.setAttribute('data-status', '');
@@ -94,21 +101,21 @@ document.addEventListener('DOMContentLoaded', () => {
         viewed.style.backgroundColor = '#ee867a';
         watching.style.backgroundColor = '#ee867a';
       };
-      dorama.appendChild(bookmarked);
+      serial.appendChild(bookmarked);
 
       const watching = document.createElement('BUTTON');
-      watching.className = 'dorama-ext-watching';
+      watching.className = 'serial-ext-watching';
       watching.textContent = 'Смотрю';
-      watching.setAttribute('data-name', doramaLink.innerText);
+      watching.setAttribute('data-name', serialLink.innerText);
       watching.style.backgroundColor = status === 'watching' ? '#75c71b' : '#ee867a';
       watching.setAttribute('data-status', status);
       watching.onclick = () => {
         if (watching.getAttribute('data-status') === 'watching') {
-          deleteDorama(doramaLink);
+          deleteSerial(serialLink);
           watching.setAttribute('data-status', '');
           watching.style.backgroundColor = '#ee867a';
         } else {
-          updateDorama('watching', doramaLink);
+          updateSerial('watching', serialLink);
           bookmarked.setAttribute('data-status', '');
           viewed.setAttribute('data-status', '');
           watching.setAttribute('data-status', 'watching');
@@ -118,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         viewed.style.backgroundColor = '#ee867a';
       };
       watching.style.marginLeft = '10px';
-      dorama.appendChild(watching);
+      serial.appendChild(watching);
     });
   });
 });

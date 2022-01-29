@@ -6,7 +6,7 @@ class AuthenticationController < ApplicationController
     permitted = params.permit(:nickname, :password)
     if @user
       unless @user.authenticate(params[:password])
-        return render json: { message: "Authenticated failed" }
+        return render json: { message: "Authenticated failed" }, status: :forbidden
       end
     else
       @user = User.create(permitted)
