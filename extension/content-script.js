@@ -124,11 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const style = document.createElement('style');
   style.textContent = `
     .serial-ext {
-      background-color: #fbf3f3;
-      color: #000;
+      background-color: #ec7263;
+      color: #fff;
+    }
+    .serial-ext:hover {
+      background-color: #ec7263;
+      color: #fff;
     }
     .serial-ext.active {
-      background-color: #ec7263;
+      background-color: #75c71b;
       color: #fff;
     }
   `;
