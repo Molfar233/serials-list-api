@@ -1,5 +1,5 @@
-// const url = 'https://stark-everglades-31197.herokuapp.com';
-const url = 'http://localhost:3000';
+const url = 'https://stark-everglades-31197.herokuapp.com';
+//const url = 'http://localhost:3000';
 let token = document.cookie.split(';').filter((item) => item.trim().startsWith('token='));
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
