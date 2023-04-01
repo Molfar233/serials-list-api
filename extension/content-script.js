@@ -1,4 +1,3 @@
-//
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'serials-reload') {
     initButtons();
@@ -20,7 +19,7 @@ const updateSerial = (status, serial, callback) => {
   }, (response) => {
     console.log('received user data', response);
     try {
-      const responseJSON = JSON.parse(response);
+      const responseJSON = response;
       if (callback) callback(responseJSON.id);
     } catch (e) {
     }
@@ -35,7 +34,7 @@ const getSerial = (serial, callback) => {
   }, (response) => {
     console.log('received user data', response);
     try {
-      const responseJSON = JSON.parse(response);
+      const responseJSON = response;
       const status = responseJSON && responseJSON.status;
       const id = responseJSON && responseJSON.id;
       if (callback) callback(status, id);

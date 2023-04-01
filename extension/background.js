@@ -1,22 +1,50 @@
-const url = 'https://stark-everglades-31197.herokuapp.com';
-//const url = 'http://localhost:3000';
-let token = document.cookie.split(';').filter((item) => item.trim().startsWith('token='));
+//const url = 'https://stark-everglades-31197.herokuapp.com';
+const url = 'http://192.168.88.179:3000';
+
+let token;
+chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
+  if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+  if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);
+  if (cookie) token = cookie.value;
+})
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'send-serial') {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', `${url}/serials?st=${message.status}&link=${message.link}&name=${message.name}`, true);
-    xhr.setRequestHeader("Authorization", token);
-    xhr.onreadystatechange = (data) => {
-      if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        sendResponse(xhr.response);
-      }
-    }
-    xhr.send(null);
+    chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
+  	if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+      if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);4
+      console.log(cookie);
+      if (cookie) token = cookie.value;
+      if (!token.length) return sendResponse({ error: 'token' });
+    
+      fetch(`${url}/serials?st=${message.status}&link=${message.link}&name=${message.name}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "Authorization": `token=${token}`
+        }, 
+      }).then(function(response) {
+        return response.json();
+      }).then(function(data) {
+        console.log(data);
+        sendResponse(data);
+      });
+    })
   }
 
   if (message.type === 'set-token') {
     token = message.token;
+
+    chrome.cookies.set({
+    	name: "token",
+    	url: url,
+   	value: message.token
+    }, function(cookie) {
+      if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+      if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);
+      token = cookie.value;  
+    });
     sendResponse('ok');
     chrome.tabs.query({
       currentWindow: true,
@@ -29,40 +57,75 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === 'get-serial') {
-    if (!token.length) return sendResponse({ error: 'token' });
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `${url}/serials/status?link=${message.link}&name=${message.name}`, true);
-    xhr.setRequestHeader("Authorization", token);
-    xhr.onreadystatechange = (data) => {
-      if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        sendResponse(xhr.response);
-      }
-    }
-    xhr.send(null);
+    chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
+  	if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+      if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);
+      console.log(cookie);
+      if (cookie) token = cookie.value;
+      if (!token.length) return sendResponse({ error: 'token' });
+
+      fetch(`${url}/serials?link=${message.link}&name=${message.name}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "Authorization": `token=${token}`
+        },
+      }).then(function(response) {
+        return response.json();
+      }).then(function(data) {
+        console.log(data);
+        sendResponse(data);
+      });
+    })
   }
 
   if (message.type === 'destroy-serial') {
-    const xhr = new XMLHttpRequest();
-    xhr.open('DELETE', `${url}/serials/${message.id}`, true);
-    xhr.setRequestHeader("Authorization", token);
-    xhr.onreadystatechange = (data) => {
-      if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        sendResponse(xhr.response);
-      }
-    }
-    xhr.send(null);
+    chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
+  	if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+      if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);
+      console.log(cookie);
+      if (cookie) token = cookie.value;
+      if (!token.length) return sendResponse({ error: 'token' });
+      
+      fetch(`${url}/serials/${message.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "Authorization": `token=${token}`
+        }, 
+      }).then(function(response) {
+        return response.json();
+      }).then(function(data) {
+        console.log(data);
+        sendResponse(data);
+      });
+    })
   }
 
   if (message.type === 'get-serials') {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `${url}/serials${message.st}`);
-    xhr.setRequestHeader("Authorization", token);
-    xhr.onreadystatechange = (data) => {
-      if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        sendResponse(xhr.response);
-      }
-    }
-    xhr.send(null);
+    chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
+  	if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+      if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);
+      console.log(cookie); 
+      if (cookie) token = cookie.value;
+      if (!token.length) return sendResponse({ error: 'token' });
+      
+      fetch(`${url}/serials${message.st}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "Authorization": `token=${token}`
+        }, 
+      }).then(function(response) {
+        return response.json();
+      }).then(function(data) {
+        console.log(data);
+        sendResponse(data);
+      });
+    })
   }
   return true;
 });

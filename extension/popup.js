@@ -1,15 +1,20 @@
-const url = 'https://stark-everglades-31197.herokuapp.com';
-//const url = 'http://localhost:3000';
+//const url = 'https://stark-everglades-31197.herokuapp.com';
+const url = 'http://192.168.88.179:3000';
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'get-popup-token') {
-    sendResponse(getToken());
-  }
-});
+    chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
+  	if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+      if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);4
+      console.log(cookie);
+      if (!cookie) return sendResponse({ error: 'token' });
 
-const getToken = () => {
-  return document.cookie.split(';').filter((item) => item.trim().startsWith('token='))
-}
+      sendResponse(cookie.value);
+    }) 
+  }
+
+  return true;
+});
 
 const getSerials = (status) => {
   let st = '';
@@ -19,7 +24,7 @@ const getSerials = (status) => {
     st
   }, (response) => {
     console.log('received user data', response);
-    serials(JSON.parse(response));
+    serials(response);
   });
 }
 
@@ -97,9 +102,8 @@ const authForm = () => {
         if (response.hasOwnProperty('token')) {
           chrome.runtime.sendMessage({
             type: 'set-token',
-            token: `token=${response.token}`,
+            token: response.token,
           }, () => {
-            document.cookie = `token=${response.token}`;
             auth.remove();
             getSerials();
           });
@@ -139,10 +143,15 @@ const authForm = () => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const token = getToken();
-  if (token.length) {
-    getSerials();
-  } else {
-    authForm();
-  }
+  chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
+    if (chrome.extension.lastError) console.log(chrome.extension.lastError);
+    if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);4
+    console.log(cookie);
+    
+    if (cookie) {
+      getSerials();
+    } else {
+      authForm();
+    }
+  })
 })
