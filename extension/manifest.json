@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Serails Ext",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Serails buttons.",
   "background": {
     "service_worker": "background.js"

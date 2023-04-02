@@ -1,6 +1,6 @@
 //const url = 'https://stark-everglades-31197.herokuapp.com';
-//const url = 'http://192.168.88.179:3000';
-const url = 'http://127.0.01:3000';
+const url = 'http://192.168.88.179:3000';
+//const url = 'http://127.0.01:3000';
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'get-popup-token') {
