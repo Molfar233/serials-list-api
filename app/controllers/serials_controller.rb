@@ -21,11 +21,8 @@ class SerialsController < ApplicationController
   end
 
   def status
-    @serial = Serial.find_by(
-      link: params[:link],
-      name: params[:name],
-      user_id: @user.id
-    )
+    query = "(? LIKE CONCAT('%', name, '%') OR name = ? OR name LIKE ?) AND link = ? AND user_id = ?"
+    @serial = Serial.where(query, params[:name], params[:name], "%#{params[:name]}%", params[:link], @user.id).first
     render json: @serial
   end
 
