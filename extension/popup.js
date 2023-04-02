@@ -1,16 +1,16 @@
 //const url = 'https://stark-everglades-31197.herokuapp.com';
-const url = 'http://192.168.88.179:3000';
+//const url = 'http://192.168.88.179:3000';
+const url = 'http://127.0.01:3000';
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'get-popup-token') {
     chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
   	if (chrome.extension.lastError) console.log(chrome.extension.lastError);
       if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);4
-      console.log(cookie);
       if (!cookie) return sendResponse({ error: 'token' });
 
       sendResponse(cookie.value);
-    }) 
+    })
   }
 
   return true;
@@ -146,8 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chrome.cookies.get({ url: url, name: 'token' }, function(cookie) {
     if (chrome.extension.lastError) console.log(chrome.extension.lastError);
     if (chrome.runtime.lastError) console.log(chrome.runtime.lastError);4
-    console.log(cookie);
-    
+
     if (cookie) {
       getSerials();
     } else {
